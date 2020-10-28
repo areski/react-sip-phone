@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Invitation } from 'sip.js'
+import { Invitation, SessionState } from 'sip.js'
 import { connect } from 'react-redux'
 import styles from './Phone.scss'
 import { acceptCall, declineCall } from '../../actions/sipSessions'
@@ -23,20 +23,27 @@ class Incoming extends React.Component<Props> {
 
   handleAccept() {
     toneManager.stopAll()
-    this.props.session.accept({
-      sessionDescriptionHandlerOptions: {
-        constraints: {
-          audio: true,
-          video: false
+    if (this.props.session.state === SessionState.Initial) {
+      this.props.session.accept({
+        sessionDescriptionHandlerOptions: {
+          constraints: {
+            audio: true,
+            video: false
+          }
         }
-      }
-    })
+      })
+    }
     this.props.acceptCall(this.props.session)
   }
 
   handleDecline() {
     toneManager.stopAll()
-    this.props.session.reject()
+    if (
+      this.props.session.state !== SessionState.Terminated &&
+      this.props.session.state !== SessionState.Terminating
+    ) {
+      this.props.session.reject()
+    }
     this.props.declineCall(this.props.session)
   }
 

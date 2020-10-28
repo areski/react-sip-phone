@@ -75,7 +75,6 @@ export default class SIPAccount {
     })
   }
 
-
   setupDelegate() {
     this._userAgent.delegate = {
       onInvite(invitation: Invitation): void {
