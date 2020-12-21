@@ -58,7 +58,25 @@ export default class SIPAccount {
           video: false
         },
         alwaysAcquireMediaFirst: true,
-        iceCheckingTimeout: 500
+        iceCheckingTimeout: 500,
+        peerConnectionOptions: {
+          // https://sipjs.com/api/0.11.0/sessionDescriptionHandler/
+          iceCheckingTimeout: 5000,
+          rtcConfiguration: {
+            // bundlePolicy: 'balanced', // Note: max-bundle is not supported by the demo backend currently (5/15/17)
+            // certificates: undefined,
+            // iceCandidatePoolSize: 0,
+            iceServers: [
+              // https://gist.github.com/mondain/b0ec1cf5f60ae726202e
+              { urls: 'stun:stun.l.google.com:19302' },
+              // { urls: 'stun:stun1.l.google.com:19302' }
+              // { urls: 'stun:stun.freeswitch.org' }
+            ]
+            // iceTransportPolicy: 'all',
+            // peerIdentity: undefined,
+            // rtcpMuxPolicy: 'require'
+          }
+        }
       }
     }
     const registererOptions: RegistererOptions = {
